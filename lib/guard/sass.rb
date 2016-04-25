@@ -98,7 +98,7 @@ module Guard
     #
     # @raise [:task_has_failed]
     def run_all
-      run_on_changes files.reject {|f| partial?(f) || !(f =~ options[:filter])}
+      run_on_changes files.reject {|f| partial?(f) }
     end
 
     def resolve_partials_to_owners(paths)
@@ -147,6 +147,7 @@ module Guard
     # @param paths [Array<String>]
     # @raise [:task_has_failed]
     def run_on_changes(paths)
+      paths.reject! {|f| !(f =~ options[:filter])}
       return run_with_partials(paths) if paths.any? {|f| partial?(f) }
 
       changed_files, success = @runner.run(paths)
